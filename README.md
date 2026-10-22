@@ -15,4 +15,7 @@
 2. Fazer rota getde resumo e rota postde login.
 
 ## 1. Prints
-
+![foto1](./foto1)
+![foto2](./foto2)
+![foto3](./foto3)
+![foto4](./foto4)
