@@ -38,11 +38,11 @@ const excluir = (req, res) => {
     con.query(sql, [id], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).json({ error: 'Erro ao excluir o evento' });
+            res.status(500).json({ error: 'Erro ao excluir o evento' })
         }else{
-        res.status(200).json({ message: 'Evento excluído com sucesso!' })};
-    });
-};
+        res.status(200).json({ message: 'Evento excluído com sucesso!' })}
+    })
+}
 
 const atualizar = (req, res) => {
     const { id } = req.params;
@@ -51,17 +51,14 @@ const atualizar = (req, res) => {
     con.query(sql, [usuarioId, cidade, tipoEvento, temperaturaMaxima, data, nivelImpacto, id], (err, results) => {
         if (err) {
             console.error(err);
-            return res.status(500).json({ error: 'Erro ao atualizar o evento' });
-        }
-        if (results.affectedRows === 0) {
-            return res.status(404).json({ error: 'Evento não encontrado' });
-        }
+            return res.status(500).json({ error: 'Erro ao atualizar o evento' })
+        }else{
 
         res.status(200).json({ 
             message: 'Evento atualizado com sucesso!',
             id: id,
             eventoAtualizado: req.body 
-        });
+        })};
     });
 };
 
