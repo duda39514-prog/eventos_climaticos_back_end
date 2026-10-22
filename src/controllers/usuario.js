@@ -34,33 +34,32 @@ const listar = (req, res) => {
 
 const excluir = (req, res) => {
     const id = req.params.id;
-    const sql = 'DELETE FROM evento WHERE id = ?'
+    const sql = 'DELETE FROM usuario WHERE id = ?'
     con.query(sql, [id], (err, results) => {
         if (err) {
             console.error(err);
-            res.status(500).json({ error: 'Erro ao excluir o usuario' });
+            return res.status(500).json({ error: 'Erro ao excluir o usuario' });
         }else{
-        res.status(200).json({ message: 'Usuario excluído com sucesso!' })};
+        res.status(200).json({ message: 'Usuário excluído com sucesso!' })}
     })
 }
 
 const atualizar = (req, res) => {
     const { id } = req.params;
-    const {nome, email, senha} = req.body;
-    const sql = 'UPDATE evento SET nome = ?, email = ?, senha = ? = ? WHERE id = ?';
+    const { nome, email, senha } = req.body;
+    const sql = 'UPDATE usuario SET nome = ?, email = ?, senha = ? WHERE id = ?'
     con.query(sql, [nome, email, senha, id], (err, results) => {
         if (err) {
             console.error(err);
-            return res.status(500).json({ error: 'Erro ao atualizar o usuario' });
+            return res.status(500).json({ error: 'Erro ao atualizar o usuario' })
         }else{
         res.status(200).json({ 
-            message: 'Usuario atualizado com sucesso!',
+            message: 'Usuário atualizado com sucesso!',
             id: id,
             usuarioAtualizado: req.body 
         })}
     })
 }
-
 
 module.exports = {
     cadastrar,
