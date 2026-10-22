@@ -41,8 +41,8 @@ const excluir = (req, res) => {
             res.status(500).json({ error: 'Erro ao excluir o usuario' });
         }else{
         res.status(200).json({ message: 'Usuario excluído com sucesso!' })};
-    });
-};
+    })
+}
 
 const atualizar = (req, res) => {
     const { id } = req.params;
@@ -57,9 +57,11 @@ const atualizar = (req, res) => {
             message: 'Usuario atualizado com sucesso!',
             id: id,
             usuarioAtualizado: req.body 
-        })};
-    });
-};
+        })}
+    })
+}
+
+
 module.exports = {
     cadastrar,
     listar, 
