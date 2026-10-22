@@ -11,5 +11,8 @@
 
 ## Atividade: 
 
-* Fazer um código atualizar e excluir para o evento e usuários.
-* Fazer rota getde resumo e rota postde login.
+1. Fazer um código atualizar e excluir para o evento e usuários.
+2. Fazer rota getde resumo e rota postde login.
+
+## 1. Prints
+
