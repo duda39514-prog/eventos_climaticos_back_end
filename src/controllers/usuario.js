@@ -1,5 +1,34 @@
 const con = require('../db')
 
+const login = (req, res) => {
+    try {
+        if (!req.body){
+            res.status(400).json("Informe email e senha no corpo da requisição").end();
+            return
+        }
+        const { email, senha } = req.body
+        if (email == undefined || senha == undefined){
+            res.status(400).json("Informe email e senha").end();
+            return
+        }
+        const sql = 'SELECT id, nome, email FROM usuario WHERE email = ? AND senha = password(?);'
+        con.query(sql, [email, senha], (err, results) => {
+            if (err) {
+                console.error(err)
+                res.status(500).json({ erro: 'Erro ao listar usuários' })
+            } else {
+                if (results.length == 0) {
+                    res.status(404).json("Acesso negado, credenciais inválidas")
+                } else {
+                    res.json(results)
+                }
+            }
+        })
+    } catch (e) {
+        res.status(500).json({ erro: 'Erro ao conectar com o banco de dados' })
+    }
+}
+
 const cadastrar = (req, res) => {
     const { nome, email, senha } = req.body
     try {
@@ -32,86 +61,46 @@ const listar = (req, res) => {
     })
 }
 
-
-const atualizar = (req, res) => {
-    const { id } = req.params;
-    const { nome, email, senha } = req.body;
-
-    const sql = 'UPDATE usuario SET nome = ?, email = ?, senha = ? WHERE id = ?';
-
-    con.query(sql, [nome, email, senha, id], (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({
-                error: 'Erro ao atualizar o usuario'
-            });
-        } else {
-            res.status(200).json({
-                message: 'Usuário atualizado com sucesso!',
-                id: id,
-                usuarioAtualizado: req.body
-            });
-        }
-    });
-};
+const alterar = (req, res) => {
+    const { nome, email, senha } = req.body
+    try {
+        const sql = 'UPDATE usuario SET nome = ?, email = ?, senha = password(?) WHERE id = ?;'
+        con.query(sql, [nome, email, senha, Number(req.params.id)], (err, results) => {
+            if (err) {
+                console.error(err)
+                res.status(500).json({ error: 'Erro ao alterar usuário' })
+            } else {
+                const novoUsuario = req.body
+                novoUsuario.id = Number(req.params.id)
+                res.status(202).json({ message: 'Usuário alterado com sucesso', user: novoUsuario })
+            }
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(400).json({ error: 'Erro ao alterar usuário', details: 'Informe { nome, email, senha }' })
+    }
+}
 
 const excluir = (req, res) => {
-    const { id } = req.params
-
-    const sql = 'DELETE FROM usuario WHERE id = ?'
-
+    const id = Number(req.params.id)
+    const sql = 'DELETE FROM usuario WHERE id = ?;'
     con.query(sql, [id], (err, results) => {
         if (err) {
             console.error(err)
-            return res.status(500).json({
-                error: 'Erro ao excluir usuário'
-            })
+            res.status(500).json({ erro: 'Erro ao excluir usuário', msg: err.sqlMessage })
+        } else {
+            if (results.affectedRows == 1)
+                res.json("Registro excluído com sucesso")
+            else
+                res.status(404).json({ msg: "Nada alerado no banco de dados", erro: results })
         }
-
-        if (results.affectedRows === 0) {
-            return res.status(404).json({
-                error: 'Usuário não encontrado'
-            })
-        }
-
-        res.status(200).json({
-            message: 'Usuário excluído com sucesso!'
-        })
-    })
-}
-
-const login = (req, res) => {
-    const { email, senha } = req.body
-    if (email, senha) {
-        return res.status(400).json({
-            error: 'Informe email e senha'
-        })
-    }
-    const sql = `
-        SELECT id, nome, email FROM usuario WHERE email = ? AND senha = PASSWORD(?)`
-    con.query(sql, [email, senha], (err, results) => {
-        if (err) {
-            console.error(err)
-            return res.status(500).json({
-                error: 'Erro ao realizar login'
-            })
-        }
-        if (results.length === 0) {
-            return res.status(404).json({
-                error: 'Email ou senha incorretos'
-            })
-        }
-        res.status(200).json({
-            message: 'Login realizado com sucesso!',
-            usuario: results[0]
-        })
     })
 }
 
 module.exports = {
+    login,
     cadastrar,
     listar,
-    atualizar,
-    excluir,
-    login
+    alterar,
+    excluir
 }
