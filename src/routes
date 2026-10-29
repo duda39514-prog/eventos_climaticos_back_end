@@ -17,5 +17,7 @@ router.delete('/eventos/:id', Evento.excluir)
 router.patch('/eventos/', Evento.atualizar)
 router.delete('/usuarios/:id', Usuario.excluir)
 router.patch('/usuarios/', Usuario.atualizar)
+router.get('/resumo', Evento.resumo)
+router.post('/login', Usuario.login)
 
 module.exports = router
